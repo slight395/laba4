@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechForge - Комплектующие для ПК</title>
+    <style>
+        /* --- Сброс и базовые стили --- */
+        :root {
+            --bg-color: #f4f7f6;
+            --surface-color: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --accent-color: #0d9488; /* Сине-зеленый */
+            --accent-hover: #0f766e;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --radius: 12px;
+            --transition: all 0.2s ease-in-out;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+        img {
+            max-width: 100%;
+            display: block;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        ul {
+            list-style: none;
+        }
+        /* --- Общие компоненты --- */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            border-radius: var(--radius);
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            border: none;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+        .btn-primary {
+            background-color: var(--accent-color);
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--accent-color);
+            color: var(--accent-color);
+        }
+        .btn-outline:hover {
+            background-color: var(--accent-color);
+            color: #fff;
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            text-align: center;
+            color: var(--text-primary);
+        }
+        /* --- Шапка (Header) --- */
+        .header {
+            background-color: var(--surface-color);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 12px 0;
+        }
+        .header__inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--accent-color);
+            letter-spacing: -0.5px;
+        }
+        .nav {
+            display: none; /* Скрыто на мобильных, показано на десктопе */
+        }
+        .nav__list {
+            display: flex;
+            gap: 20px;
+        }
+        .nav__link {
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: var(--transition);
+        }
+        .nav__link:hover {
+            color: var(--accent-color);
+        }
+        .header__actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            justify-content: space-between;
+        }
+        .auth-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        .cart-btn {
+            position: relative;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            padding: 8px 12px;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .cart-btn:hover {
+            background: var(--border-color);
+        }
+        .cart-badge {
+            background-color: var(--accent-color);
+            color: #fff;
+            font-size: 0.75rem;
+            padding: 2px 6px;
+            border-radius: 50%;
+            font-weight: 700;
+        }
+        /* --- Секция Hero --- */
+        .hero {
+            background: linear-gradient(135deg, #e0f2fe 0%, #ccfbf1 100%);
+            padding: 60px 0;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .hero__title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+            line-height: 1.2;
+        }
+        .hero__subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .hero__buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+        }
+        /* --- Сетка товаров --- */
+        .products {
+            padding: 60px 0;
+        }
+        .products__grid {
+            display: grid;
+            grid-template-columns: 1fr; /* Mobile-first: 1 колонка */
+            gap: 20px;
+        }
+        .product-card {
+            background-color: var(--surface-color);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--border-color);
+        }
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+        .product-card__image {
+            background-color: #f1f5f9;
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .product-card__image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .product-card__body {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+        .product-card__title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            flex-grow: 1;
+        }
+        .product-card__price {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            margin-bottom: 16px;
+        }
+        /* --- Секция преимуществ --- */
+        .features {
+            padding: 60px 0;
+            background-color: var(--surface-color);
+        }
+        .features__grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+        .feature-card {
+            text-align: center;
+            padding: 24px;
+            background-color: var(--bg-color);
+            border-radius: var(--radius);
+            transition: var(--transition);
+        }
+        .feature-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        .feature-card__icon {
+    font-size: 2.2rem;
+    margin-bottom: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    line-height: 1;
+}
+.feature-card:nth-child(1) .feature-card__icon {
+    color: #16a34a;               /* зелёный */
+    background-color: #dcfce7;
+}
+.feature-card:nth-child(2) .feature-card__icon {
+    color: #2563eb;               /* синий */
+    background-color: #dbeafe;
+}
+.feature-card:nth-child(3) .feature-card__icon {
+    color: #dc2626;               /* красный */
+    background-color: #fee2e2;
+}
+.feature-card:nth-child(4) .feature-card__icon {
+    color: #7c3aed;               /* фиолетовый */
+    background-color: #ede9fe;
+}
+        .feature-card__title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .feature-card__desc {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+        /* --- Секция "О нас" --- */
+        .about {
+            padding: 60px 0;
+        }
+        .about__text {
+            max-width: 800px;
+            margin: 0 auto 40px auto;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        .stat-card {
+            background-color: var(--surface-color);
+            padding: 24px;
+            border-radius: var(--radius);
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+        }
+        .stat-card__number {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--accent-color);
+            margin-bottom: 8px;
+            display: block;
+        }
+        .stat-card__label {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+        /* --- Форма обратной связи --- */
+        .contact {
+            padding: 60px 0;
+            background-color: var(--surface-color);
+        }
+        .contact__form {
+            max-width: 600px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .form-group label {
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        .form-group input,
+        .form-group textarea {
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            font-family: inherit;
+            font-size: 1rem;
+            outline: none;
+            transition: var(--transition);
+            background-color: var(--bg-color);
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.2);
+            background-color: #fff;
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+        .checkbox-group input {
+            margin-top: 4px;
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent-color);
+            cursor: pointer;
+        }
+        /* --- Подвал (Footer) --- */
+        .footer {
+            background-color: var(--text-primary);
+            color: #cbd5e1;
+            padding: 40px 0 20px 0;
+        }
+        .footer__inner {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            align-items: center;
+            text-align: center;
+        }
+        .footer__logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #fff;
+        }
+        .footer__nav {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 16px;
+        }
+        .footer__link {
+            transition: var(--transition);
+        }
+        .footer__link:hover {
+            color: #fff;
+        }
+        .footer__bottom {
+            margin-top: 32px;
+            padding-top: 20px;
+            border-top: 1px solid #334155;
+            font-size: 0.85rem;
+            text-align: center;
+            width: 100%;
+        }
+        /* --- Медиа-запросы (Desktop) --- */
+        @media (min-width: 768px) {
+            .header__inner {
+                flex-wrap: nowrap;
+            }
+            .nav {
+                display: block;
+            }
+            .header__actions {
+                width: auto;
+                justify-content: flex-end;
+            }
+            .hero {
+                padding: 100px 0;
+            }
+            .hero__title {
+                font-size: 3rem;
+            }
+            .hero__subtitle {
+                font-size: 1.25rem;
+            }
+            .hero__buttons {
+                flex-direction: row;
+                justify-content: center;
+            }
+            .products__grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .features__grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            .stats {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .footer__inner {
+                flex-direction: row;
+                justify-content: space-between;
+                text-align: left;
+            }
+        }
+        @media (min-width: 1024px) {
+            .products__grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Шапка -->
+    <header class="header">
+        <div class="container header__inner">
+            <a href="#" class="logo">TechForge</a>
+            <nav class="nav">
+                <ul class="nav__list">
+                    <li><a href="#" class="nav__link">Главная</a></li>
+                    <li><a href="#" class="nav__link">Каталог</a></li>
+                    <li><a href="#" class="nav__link">О нас</a></li>
+                    <li><a href="#" class="nav__link">Контакты</a></li>
+                </ul>
+            </nav>
+            <div class="header__actions">
+                <div class="auth-buttons">
+                    <button class="btn btn-outline" style="padding: 8px 16px; font-size: 0.85rem;">Войти</button>
+                    <button class="btn btn-primary" style="padding: 8px 16px; font-size: 0.85rem;">Регистрация</button>
+                </div>
+                <button class="cart-btn">
+                    Корзина
+                    <span class="cart-badge">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Первый экран (Hero) -->
+        <section class="hero">
+            <div class="container">
+                <h1 class="hero__title">Комплектующие для ПК — собери свой идеальный компьютер</h1>
+                <p class="hero__subtitle">Большой выбор, честные цены, быстрая доставка</p>
+                <div class="hero__buttons">
+                    <a href="#products" class="btn btn-primary">В каталог</a>
+                    <a href="#products" class="btn btn-outline">Популярные товары</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Блок Хиты продаж (C3: данные вынесены в JSON, рендер — отдельным скриптом) -->
+        <section class="products" id="products">
+            <div class="container">
+                <h2 class="section-title">Хиты продаж</h2>
+                <div class="products__grid" id="products-grid"></div>
+            </div>
+        </section>
+
+        <!-- Блок преимуществ (D1: декоративные эмодзи скрыты от скринридеров) -->
+        <section class="features">
+            <div class="container">
+                <h2 class="section-title">Почему выбирают TechForge</h2>
+                <div class="features__grid">
+                    <div class="feature-card">
+                        <div class="feature-card__icon" aria-hidden="true">✅</div>
+                        <h3 class="feature-card__title">Гарантия 3 года</h3>
+                        <p class="feature-card__desc">На все комплектующие</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-card__icon" aria-hidden="true">🚚</div>
+                        <h3 class="feature-card__title">Быстрая доставка</h3>
+                        <p class="feature-card__desc">По всей России</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-card__icon" aria-hidden="true">📞</div>
+                        <h3 class="feature-card__title">Поддержка 24/7</h3>
+                        <p class="feature-card__desc">Всегда на связи</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-card__icon" aria-hidden="true">💳</div>
+                        <h3 class="feature-card__title">Удобные способы оплаты</h3>
+                        <p class="feature-card__desc">Картой, наличными, рассрочка</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Блок О нас -->
+        <section class="about">
+            <div class="container">
+                <h2 class="section-title">О нас</h2>
+                <p class="about__text">
+                    TechForge — ваш надёжный поставщик комплектующих для ПК: мы тщательно отбираем поставщиков, проверяем каждую партию и гарантируем качество; наша цель — сделать сборку компьютера простой и выгодной для каждого клиента.
+                </p>
+                <div class="stats">
+                    <div class="stat-card">
+                        <span class="stat-card__number">5000+</span>
+                        <span class="stat-card__label">товаров в постоянном ассортименте</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-card__number">1-3 дня</span>
+                        <span class="stat-card__label">доставка по всей стране</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-card__number">98%</span>
+                        <span class="stat-card__label">положительных отзывов</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Форма обратной связи -->
+        <section class="contact">
+            <div class="container">
+                <h2 class="section-title">Остались вопросы?</h2>
+                <form class="contact__form" action="#" method="POST">
+                    <div class="form-group">
+                        <label for="name">Имя</label>
+                        <input type="text" id="name" name="name" placeholder="Ваше имя" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="your@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Сообщение</label>
+                        <textarea id="message" name="message" placeholder="Ваш вопрос..." required></textarea>
+                    </div>
+                    <label class="checkbox-group">
+                        <input type="checkbox" required>
+                        <span>Согласен с обработкой данных</span>
+                    </label>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Отправить</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- Подвал -->
+    <footer class="footer">
+        <div class="container footer__inner">
+            <div class="footer__logo">TechForge</div>
+            <nav class="footer__nav">
+                <a href="#" class="footer__link">Помощь</a>
+                <a href="#" class="footer__link">Политика конфиденциальности</a>
+                <a href="#" class="footer__link">Копирайт</a>
+            </nav>
+            <div class="footer__socials">
+                <!-- Ссылки-заглушки на соцсети -->
+                <a href="#" class="footer__link" style="margin: 0 8px;">VK</a>
+                <a href="#" class="footer__link" style="margin: 0 8px;">TG</a>
+                <a href="#" class="footer__link" style="margin: 0 8px;">YT</a>
+            </div>
+        </div>
+        <div class="container footer__bottom">
+            &copy; 2026 TechForge. Все права защищены.
+        </div>
+    </footer>
+
+    <!-- C3: данные каталога — отдельный JSON-блок (данные) -->
+    <script type="application/json" id="catalog-data">
+    {
+        "products": [
+            { "id": 1, "title": "Процессор Intel Core i5", "price": "24 990 ₽", "image": "assets/images/cpu.svg", "alt": "Процессор Intel Core i5" },
+            { "id": 2, "title": "Видеокарта RTX 3060",      "price": "42 500 ₽", "image": "assets/images/gpu.svg", "alt": "Видеокарта RTX 3060" },
+            { "id": 3, "title": "SSD 1 ТБ",                  "price": "7 800 ₽",  "image": "assets/images/ssd.svg", "alt": "SSD 1 ТБ" },
+            { "id": 4, "title": "Оперативная память 16 ГБ",  "price": "5 200 ₽",  "image": "assets/images/ram.svg", "alt": "Оперативная память 16 ГБ" }
+        ]
+    }
+    </script>
+
+    <!-- C3: логика отрисовки каталога — отдельно от данных -->
+    <script>
+        (function () {
+            var dataNode = document.getElementById('catalog-data');
+            var grid = document.getElementById('products-grid');
+            if (!dataNode || !grid) return;
+
+            var catalog;
+            try {
+                catalog = JSON.parse(dataNode.textContent);
+            } catch (e) {
+                console.error('Не удалось разобрать catalog-data:', e);
+                return;
+            }
+
+            var escapeHtml = function (str) {
+                return String(str).replace(/[&<>"']/g, function (ch) {
+                    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch];
+                });
+            };
+
+            grid.innerHTML = (catalog.products || []).map(function (p) {
+                var imageHtml = p.image
+                    ? '<img class="product-card__img" src="' + escapeHtml(p.image) + '" alt="' + escapeHtml(p.alt || p.title) + '" loading="lazy">'
+                    : 'Фото товара';
+                return '' +
+                    '<article class="product-card">' +
+                        '<div class="product-card__image">' + imageHtml + '</div>' +
+                        '<div class="product-card__body">' +
+                            '<h3 class="product-card__title">' + escapeHtml(p.title) + '</h3>' +
+                            '<p class="product-card__price">' + escapeHtml(p.price) + '</p>' +
+                            '<button class="btn btn-primary" style="width: 100%;">В корзину</button>' +
+                        '</div>' +
+                    '</article>';
+            }).join('');
+        })();
+    </script>
+</body>
+</html>
